@@ -1,6 +1,6 @@
 <?php
 
-/* Set licence key to last 2000 years. */
+/* Set licence key to last 20 years. */
 add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
 
 /* Redirecting to Checkout when Adding an Item to the Cart. */
@@ -12,7 +12,7 @@ add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
  * @since       0.1.0
 */
 function my_edd_stuff_license_length( $length, $payment_id, $download_id, $license_id ) {
-	return '+10 years'; // set length to two thousand years from creation date
+	return '+20 year'; // set length to 20 years from creation date
 }
 
 /**
