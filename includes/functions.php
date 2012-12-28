@@ -7,7 +7,7 @@ add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
 //add_action( 'edd_add_to_cart', 'my_edd_stuff_redirect_to_cart_on_add', 999 );
 
 /**
- * Set licence key to last 10 years.
+ * Set licence key to last 20 years.
  *
  * @since       0.1.0
 */
