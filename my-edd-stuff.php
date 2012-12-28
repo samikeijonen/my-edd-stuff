@@ -1,11 +1,11 @@
 <?php
 /**
-* Plugin Name: my EDD Stuff
+* Plugin Name: My EDD Stuff
 * Plugin URI: http://foxnet-themes.com
 * Description: My EDD stuff.
 * Version: 0.1
 * Author: Sami Keijonen
-* Author URI: http://foxnet-downloads.com
+* Author URI: http://foxnet-themes.fi
 *
 * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
 * General Public License version 2, as published by the Free Software Foundation. You may NOT assume
@@ -14,7 +14,7 @@
 * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
 * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 *
-* @package EDDDownloadInfo
+* @package MyEDDStuff
 * @version 0.1
 * @author Sami Keijonen <sami.keijonen@foxnet.fi>
 * @copyright Copyright (c) 2012, Sami Keijonen
