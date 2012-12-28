@@ -1,7 +1,7 @@
 <?php
 /**
 * Plugin Name: My EDD Stuff
-* Plugin URI: http://foxnet-themes.com
+* Plugin URI: http://foxnet-themes.fi
 * Description: My EDD stuff.
 * Version: 0.1
 * Author: Sami Keijonen
