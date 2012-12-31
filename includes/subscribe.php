@@ -1,6 +1,10 @@
 <?php
 
-/* Add custom user meta when purchasing something on the site: expire_date --> current date +1 year. */
+/* Add custom user meta when purchasing something on the site. For now support is based on variable pricing.
+ * First option get you 6 months of support.
+ * Second option get you 1 year of support.
+ * Third option get you 2 year of support.
+ */
 add_action( 'edd_update_payment_status', 'my_edd_stuff_add_expire_date', 10, 3 );
 
 /* Add new user column: Expire Date. */
@@ -10,7 +14,7 @@ add_filter( 'manage_users_columns', 'my_edd_stuff_expire_date_column' );
 add_action( 'manage_users_custom_column', 'my_edd_stuff_expire_date_data', 10, 3 );
 
 /**
- *  Add or update custom user meta when purchasing something on the site: expire_date --> current date +1 year.
+ *  Add or update custom user meta when purchasing something on the site.
  *
  * @since       0.1.0
 */
