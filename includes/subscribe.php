@@ -71,7 +71,7 @@ function my_edd_stuff_add_expire_date( $payment_id, $new_status, $old_status ) {
 	/* Get expire date. */
 	$expire_date = get_user_meta( $user_id, 'expire_date', true );
 	
-	/* If expire_date is not set ( this means new user), add current_date + support_time. Else there is current_date already. */
+	/* If expire_date is not set (this means new user), add current_date + support_time. Else there is current_date already. */
 	if ( !isset( $expire_date ) ) {
 		$expire_date = strtotime ( $support_time , strtotime ( $current_date ) ) ;
 	}
