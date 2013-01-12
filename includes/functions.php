@@ -63,7 +63,7 @@ function my_edd_stuff_downloads_license_limit_td( $puchase_id, $download_id ){
 	
 	/* Get site count. How many sites have been activated with this key. */
 	$site_count = my_edd_stuff_get_license_count( $download_id );
-
+	
 	/* If there is no site count, set it to 0. */
 	if ( empty( $site_count ) )
 		$site_count = 0;
@@ -85,12 +85,14 @@ function my_edd_stuff_get_license_count( $download_id ) {
 	
 	/* Get license. */
 	$license = $licensing->get_license_by_download( $download_id );
-	$license_id = $license->ID;
 	
-	/* Get site count by license ID. */
-	$site_count = absint( get_post_meta( $license_id, '_edd_sl_site_count', true ) );
-
-	return $site_count;
+	/* Get license ID if there is one. */
+	if ( $license )
+		$license_id = $license->ID;
+	
+	/* Get site count by license ID if there is one. */
+	if ( isset( $license_id ) )
+		return absint( get_post_meta( $license_id, '_edd_sl_site_count', true ) );
 
 }
 
