@@ -43,7 +43,7 @@ function my_edd_stuff_redirect_to_cart_on_add( $data ) {
  */
 function my_edd_stuff_downloads_license_limit_th() {
 
-	echo '<th class="my-edd-stuff-download-limit">' . __( 'Limit', 'my-edd-stuff' ) . '</th>';
+	echo '<th class="my-edd-stuff-site-count">' . __( 'Site Count', 'my-edd-stuff' ) . '</th>';
 	
 }
 
@@ -69,7 +69,7 @@ function my_edd_stuff_downloads_license_limit_td( $puchase_id, $download_id ){
 		$site_count = 0;
 	
 	/* Echo site count anf license limit to [download_history] shortcode. */
-	echo '<td class="my-edd-stuff-download-limit">'. $site_count . '/' . $license_limit .'</td>';
+	echo '<td class="my-edd-stuff-site-count">'. $site_count . '/' . $license_limit .'</td>';
 	
 }
 
