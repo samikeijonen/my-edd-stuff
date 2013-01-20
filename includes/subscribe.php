@@ -38,7 +38,7 @@ function my_edd_stuff_add_expire_date( $payment_id, $new_status, $old_status ) {
 		
 		/* Retrieve the price_id. */
 		$price_options = $cart_items[$key]['item_number']['options'];
-																															
+		
 		if( isset( $price_options['price_id'] ) ) {
 			
 			/* Get price id. This is 0, 1, 2 etc. Use this. */

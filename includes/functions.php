@@ -52,10 +52,11 @@ function my_edd_stuff_downloads_license_limit_th() {
  *
  * @since 0.1.0
  */
-function my_edd_stuff_downloads_license_limit_td( $puchase_id, $download_id ){
+function my_edd_stuff_downloads_license_limit_td( $purchase_id, $download_id ){
 	
 	/* Get license limit. */
-	$license_limit = get_post_meta( $download_id, '_edd_sl_limit', true );
+	//$license_limit = get_post_meta( $download_id, '_edd_sl_limit', true );
+	$license_limit = my_edd_stuff_get_license_limit( $purchase_id, $download_id );
 	
 	/* If license limit is infinite (0), set it as infinite sign. */
 	if ( 0 == $license_limit )
@@ -68,7 +69,7 @@ function my_edd_stuff_downloads_license_limit_td( $puchase_id, $download_id ){
 	if ( empty( $site_count ) )
 		$site_count = 0;
 	
-	/* Echo site count anf license limit to [download_history] shortcode. */
+	/* Echo site count and license limit to [download_history] shortcode. */
 	echo '<td class="my-edd-stuff-site-count">'. $site_count . '/' . $license_limit .'</td>';
 	
 }
@@ -93,6 +94,50 @@ function my_edd_stuff_get_license_count( $download_id ) {
 	/* Get site count by license ID if there is one. */
 	if ( isset( $license_id ) )
 		return absint( get_post_meta( $license_id, '_edd_sl_site_count', true ) );
+
+}
+
+/**
+ * Get license limit. This is based on price id in variable pricing. This is 0, 1, 2 etc.
+ *
+ * @since 0.1.0
+ */
+function my_edd_stuff_get_license_limit( $purchase_id, $download_id ) {
+	
+	/* Get purchase details. */
+	$purchase_details = edd_get_payment_meta_cart_details( $purchase_id );
+
+	$price_id = false;
+	
+	/* Get price id from variable pricing. This is 0, 1, 2. */
+	foreach( $purchase_details as $item ) {
+		if( $item['id'] == $download_id ) {
+			if( ! empty( $item['item_number']['options'] ) ) {
+				$price_id = (int) $item['item_number']['options']['price_id'];
+			}
+		}
+	}
+	
+	/* Decide what are license limits. For now it's 1, 4 and unlimited. */
+	if( $price_id !== false ) {
+
+		switch( $price_id ) {
+
+			case 0:
+				$license_limit = 1; // single site license
+				break;
+			case 1:
+				$license_limit = 4; // up to 4 sites
+				break;
+			case 2:
+				$license_limit = 0; // unlimited
+				break;
+		}
+	
+	}
+	
+	/* Return license limit. */
+	return $license_limit;
 
 }
 
