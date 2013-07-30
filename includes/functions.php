@@ -6,9 +6,9 @@ add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
 /* Redirecting to Checkout when Adding an Item to the Cart. */
 //add_action( 'edd_add_to_cart', 'my_edd_stuff_redirect_to_cart_on_add', 999 );
 
-/* Show how many license activations you have used in [download_history] table. */
-add_action( 'edd_download_history_header_end', 'my_edd_stuff_downloads_license_limit_th', 11 );
-add_action( 'edd_download_history_row_end', 'my_edd_stuff_downloads_license_limit_td', 11, 2 );
+/* Show how many license activations you have used in [purchase_history] table. */
+add_action( 'edd_purchase_history_header_after', 'my_edd_stuff_downloads_license_limit_th', 11 );
+add_action( 'edd_purchase_history_row_end', 'my_edd_stuff_downloads_license_limit_td', 11, 2 );
 
 /**
  * Set licence key to last 20 years.
@@ -37,9 +37,9 @@ function my_edd_stuff_redirect_to_cart_on_add( $data ) {
 }
 
 /**
- * Show license key limit in [download_history] shortcode. 
+ * Show license key limit in [purchase_history] shortcode.
  *
- * @since 0.1.0
+ * @since 0.1.1
  */
 function my_edd_stuff_downloads_license_limit_th() {
 
@@ -48,22 +48,22 @@ function my_edd_stuff_downloads_license_limit_th() {
 }
 
 /**
- * Show license key limit in [download_history] shortcode.
+ * Show license key limit in [purchase_history] shortcode.
  *
- * @since 0.1.0
+ * @since 0.1.1
  */
-function my_edd_stuff_downloads_license_limit_td( $purchase_id, $download_id ){
+function my_edd_stuff_downloads_license_limit_td( $payment_id, $purchase_data ) {
 	
 	/* Get license limit. */
 	//$license_limit = get_post_meta( $download_id, '_edd_sl_limit', true );
-	$license_limit = my_edd_stuff_get_license_limit( $purchase_id, $download_id );
+	$license_limit = my_edd_stuff_get_license_limit( $payment_id, $purchase_data );
 	
 	/* If license limit is infinite (0), set it as infinite sign. */
 	if ( 0 == $license_limit )
 		$license_limit = "&#8734;";
 	
 	/* Get site count. How many sites have been activated with this key. */
-	$site_count = my_edd_stuff_get_license_count( $download_id );
+	$site_count = my_edd_stuff_get_license_count( $payment_id, $purchase_data );
 	
 	/* If there is no site count, set it to 0. */
 	if ( empty( $site_count ) )
@@ -79,21 +79,18 @@ function my_edd_stuff_downloads_license_limit_td( $purchase_id, $download_id ){
  *
  * @since 0.1.0
  */
-function my_edd_stuff_get_license_count( $download_id ) {
+function my_edd_stuff_get_license_count( $payment_id, $purchase_data) {
 
-	//$licensing = new EDD_Software_Licensing();
-	$licensing = $GLOBALS['EDD_Software_Licenseing'];
+	$licensing = edd_software_licensing();
+	$downloads = edd_get_payment_meta_downloads( $payment_id );
 	
 	/* Get license. */
-	$license = $licensing->get_license_by_download( $download_id );
-	
-	/* Get license ID if there is one. */
-	if ( $license )
-		$license_id = $license->ID;
-	
-	/* Get site count by license ID if there is one. */
-	if ( isset( $license_id ) )
-		return absint( get_post_meta( $license_id, '_edd_sl_site_count', true ) );
+	foreach( $downloads as $download ) {
+	$license = $licensing->get_license_by_purchase( $payment_id, $download['id'] );
+		if( $license ) {
+			return absint( get_post_meta( $license->ID, '_edd_sl_site_count', true ) );
+		}
+	}
 
 }
 
@@ -102,20 +99,19 @@ function my_edd_stuff_get_license_count( $download_id ) {
  *
  * @since 0.1.0
  */
-function my_edd_stuff_get_license_limit( $purchase_id, $download_id ) {
+function my_edd_stuff_get_license_limit( $payment_id, $purchase_data ) {
+
+	global $edd_receipt_args;
 	
 	/* Get purchase details. */
-	$purchase_details = edd_get_payment_meta_cart_details( $purchase_id );
-
+	$meta = edd_get_payment_meta( $payment_id );
+	$cart = edd_get_payment_meta_cart_details( $payment_id, true );
+	
 	$price_id = false;
 	
 	/* Get price id from variable pricing. This is 0, 1, 2. */
-	foreach( $purchase_details as $item ) {
-		if( $item['id'] == $download_id ) {
-			if( ! empty( $item['item_number']['options'] ) ) {
-				$price_id = (int) $item['item_number']['options']['price_id'];
-			}
-		}
+	foreach( $cart as $key => $item ) {
+		$price_id = edd_get_cart_item_price_id( $item );
 	}
 	
 	/* Decide what are license limits. For now it's 1, 4 and unlimited. */
