@@ -3,7 +3,7 @@
 * Plugin Name: My EDD Stuff
 * Plugin URI: http://foxnet-themes.fi
 * Description: My EDD stuff.
-* Version: 0.1
+* Version: 0.1.2
 * Author: Sami Keijonen
 * Author URI: http://foxnet-themes.fi
 *
@@ -15,7 +15,7 @@
 * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 *
 * @package MyEDDStuff
-* @version 0.1
+* @version 0.1.2
 * @author Sami Keijonen <sami.keijonen@foxnet.fi>
 * @copyright Copyright (c) 2012, Sami Keijonen
 * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
