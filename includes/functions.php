@@ -1,7 +1,7 @@
 <?php
 
 /* Set licence key to last 20 years. */
-add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
+//add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
 
 /* Redirecting to Checkout when Adding an Item to the Cart. */
 //add_action( 'edd_add_to_cart', 'my_edd_stuff_redirect_to_cart_on_add', 999 );
@@ -9,6 +9,10 @@ add_filter( 'edd_sl_license_exp_length', 'my_edd_stuff_license_length', 10, 4 );
 /* Show how many license activations you have used in [purchase_history] table. */
 add_action( 'edd_purchase_history_header_after', 'my_edd_stuff_downloads_license_limit_th', 11 );
 add_action( 'edd_purchase_history_row_end', 'my_edd_stuff_downloads_license_limit_td', 11, 2 );
+
+/* Show expire date in [purchase_history] table. */
+add_action( 'edd_purchase_history_header_after', 'my_edd_stuff_downloads_expire_th', 12 );
+add_action( 'edd_purchase_history_row_end', 'my_edd_stuff_downloads_expire_td', 12, 2 );
 
 /**
  * Set licence key to last 20 years.
@@ -48,6 +52,17 @@ function my_edd_stuff_downloads_license_limit_th() {
 }
 
 /**
+ * Show expire date in [purchase_history] shortcode.
+ *
+ * @since 0.1.2
+ */
+function my_edd_stuff_downloads_expire_th() {
+
+	echo '<th class="my-edd-stuff-site-count">' . __( 'Expire', 'my-edd-stuff' ) . '</th>';
+	
+}
+
+/**
  * Show license key limit in [purchase_history] shortcode.
  *
  * @since 0.1.1
@@ -69,8 +84,23 @@ function my_edd_stuff_downloads_license_limit_td( $payment_id, $purchase_data ) 
 	if ( empty( $site_count ) )
 		$site_count = 0;
 	
-	/* Echo site count and license limit to [download_history] shortcode. */
+	/* Echo site count and license limit to [purchase_history] shortcode. */
 	echo '<td class="my-edd-stuff-site-count">'. $site_count . '/' . $license_limit .'</td>';
+	
+}
+
+/**
+ * Show expire date in [purchase_history] shortcode.
+ *
+ * @since 0.1.2
+ */
+function my_edd_stuff_downloads_expire_td( $payment_id, $purchase_data ) {
+	
+	/* Get license expire date. */
+	$expire_date = my_edd_stuff_get_expire_date( $payment_id, $purchase_data );
+	
+	/* Echo license expire date to [purchase_history] shortcode. */
+	echo '<td class="my-edd-stuff-expire">' . date( get_option( 'date_format' ), $expire_date ) . '</td>';
 	
 }
 
@@ -88,7 +118,31 @@ function my_edd_stuff_get_license_count( $payment_id, $purchase_data) {
 	foreach( $downloads as $download ) {
 	$license = $licensing->get_license_by_purchase( $payment_id, $download['id'] );
 		if( $license ) {
-			return absint( get_post_meta( $license->ID, '_edd_sl_site_count', true ) );
+			$sites = get_post_meta( $license->ID, '_edd_sl_sites', true );
+			if( !empty( $sites ) ) {
+				//$sites = array();
+				return count( $sites );
+			 }
+		}
+	}
+
+}
+
+/**
+ * Get site count.
+ *
+ * @since 0.1.2
+ */
+function my_edd_stuff_get_expire_date( $payment_id, $purchase_data) {
+
+	$licensing = edd_software_licensing();
+	$downloads = edd_get_payment_meta_downloads( $payment_id );
+	
+	/* Get license. */
+	foreach( $downloads as $download ) {
+	$license = $licensing->get_license_by_purchase( $payment_id, $download['id'] );
+		if( $license ) {
+			return absint( get_post_meta( $license->ID, '_edd_sl_expiration', true ) );
 		}
 	}
 
